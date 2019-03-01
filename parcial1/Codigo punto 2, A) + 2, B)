@@ -1,0 +1,79 @@
+#Tx <- function(x)  tan(pi*x)
+#Gx <- function(x)  sin(pi*x)
+Fx<- function(x) tan(pi*x)-sin(pi*x)
+
+#Se declara el error acorde a lo solicitado
+epsylon <- 1.e-9
+
+#Se declara la funcion
+#Name: extraerRaiz
+#Param: Punto en x, punto en x
+extraerRaiz<-function(x1,x2, epsylon)
+{
+  error<-epsylon+1
+  x0<-x1-((Fx(x1)*(x1-x2))/(Fx(x1)-Fx(x2)))
+  
+  x1<-x2
+  x2<-x0
+  i<-0
+  while(error>epsylon)
+  {
+    x3<-x1-((Fx(x1)*(x1-x2))
+            /
+            (Fx(x1)-Fx(x2)))
+    error<-abs((x3-x2)/x3)*100
+    #Error arrojado a manera de porcentaje
+    cat("x=",x3,"\t Error:",error,"\titeraciones:",i,"\n")
+    x1<-x2
+    x2<-x3
+    i<-i+1
+  }
+}
+extraerRaiz(1,2, epsylon)
+extraerRaiz(2,3, epsylon)
+
+#Funcion derivada
+Dx <- function(x) (sec(pi*x)^2)*pi-(cos(pi*x))*pi
+newtonAitken<-function(r,epsylon){
+  i<-0
+  error<-1
+  while(i<=3 && error>epsylon){
+    if(r!=0){ 
+      bef=r
+      r<-r-((Fx(r))/Dx(r))
+      error<-(abs(bef-r))/abs(bef)
+      cat("R=",r,"\t Error:",error,"i:",i,"\n")
+      if(i==1)
+      {
+        x0=r
+      }
+      else
+      {
+        if(i==2)
+        {
+          x1=r
+        } 
+        else
+        {
+          x2=r
+        }
+      }
+    }
+    i=i+1
+  }
+  
+  while(error>epsylon){
+    if(r!=0){
+      x3=x2-(((x2-x1)^2)/(x2-(2*x1)+x0))
+      x0=x1
+      x1=x2
+      error<-(abs(x2-x3))/abs(x2)
+      cat("R=",x3,"\t Error:",error,"i:",i,"\n")
+      r<-r-((Fx(r))/Dx(r))
+      x2=r
+    }
+    i=i+1
+  }
+}
+newtonAitken(1, 1.e-9)
+
